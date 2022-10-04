@@ -1,9 +1,33 @@
-const postcssConfig = require('./postcss.config')
 const cracoAlias = require('craco-alias')
 
 module.exports = {
   style: {
-    postcss: postcssConfig,
+    postcss: {
+      loaderOptions: (postcssLoaderOptions) => {
+        postcssLoaderOptions.postcssOptions.plugins = [
+          require('tailwindcss/nesting'),
+          require('tailwindcss'),
+          require('postcss-import'),
+          ['stylelint', { configFile: 'stylelint.config.js' }],
+
+          require('autoprefixer'),
+          require('postcss-extend'),
+          require('postcss-reporter'),
+          [
+            'postcss-preset-env',
+            {
+              autoprefixer: {
+                flexbox: 'no-2009',
+              },
+              features: { 'nesting-rules': false },
+              stage: 0,
+            },
+          ],
+        ]
+
+        return postcssLoaderOptions
+      },
+    },
   },
   plugins: [
     {
